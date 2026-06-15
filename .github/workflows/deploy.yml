@@ -5,11 +5,14 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     name: Deploy CF Worker → pay.rald.cloud
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -25,14 +28,20 @@ jobs:
       - name: Typecheck
         run: npm run typecheck 2>/dev/null || true
 
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+      - name: Install Wrangler globally
+        run: npm install -g wrangler@latest
 
-# Worker secrets — set once via CF dashboard or wrangler CLI:
-#   echo "VALUE" | wrangler secret put SUPABASE_SERVICE_ROLE_KEY
-#   echo "VALUE" | wrangler secret put RALD_JWT_SECRET
-#   echo "VALUE" | wrangler secret put MACHINE_IDENTITY_SECRET
+      - name: Deploy Worker
+        run: wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Provision Worker secrets
+        run: |
+          echo "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" | wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+          echo "${{ secrets.RALD_JWT_SECRET }}" | wrangler secret put RALD_JWT_SECRET
+          echo "${{ secrets.SESSION_SECRET }}" | wrangler secret put MACHINE_IDENTITY_SECRET
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
