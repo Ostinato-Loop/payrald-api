@@ -1,0 +1,22 @@
+{
+  "name": "@payrald/api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PayRald API — CF Worker gateway. JWT auth + rate limiting + delegation to payrald-core.",
+  "scripts": {
+    "dev":       "wrangler dev --port 8792",
+    "deploy":    "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "lint":      "biome check . --diagnostic-level=error"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
+    "hono":                  "^4.7.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome":            "^1.9.4",
+    "@cloudflare/workers-types": "^4.20250525.0",
+    "typescript":                "^5.8.3",
+    "wrangler":                  "^4.99.0"
+  }
+}
