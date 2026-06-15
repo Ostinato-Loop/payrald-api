@@ -12,6 +12,7 @@ import transfersRoutes               from "./routes/transfers";
 import withdrawalsRoutes             from "./routes/withdrawals";
 import walletRoutes                  from "./routes/wallet";
 import resolveRoutes                 from "./routes/resolve";
+import paymentsRoutes                from "./routes/payments";
 
 export type Bindings = {
   SUPABASE_URL:              string;
@@ -86,19 +87,26 @@ app.route("/v1", transfersRoutes);
 app.route("/v1", withdrawalsRoutes);
 app.route("/v1", walletRoutes);
 app.route("/v1", resolveRoutes);
+app.route("/v1", paymentsRoutes);
 
 // Root manifest
 app.get("/", (c) => c.json({
   service: "payrald-api", version: VERSION,
   endpoints: {
-    health:      "GET /health",
-    wallet:      "GET /v1/wallet",
-    transactions: "GET /v1/wallet/transactions",
-    banks:        "GET /v1/banks",
-    resolve:      "POST /v1/resolve",
-    transfers:    "POST /v1/transfers | GET /v1/transfers | GET /v1/transfers/:id",
-    withdrawals:  "POST /v1/withdrawals | GET /v1/withdrawals | POST /v1/withdrawals/verify-account",
-    preview:      "GET /v1/transfers/preview?alias=<alias>",
+    health:           "GET /health",
+    wallet:           "GET /v1/wallet",
+    transactions:     "GET /v1/wallet/transactions",
+    banks:            "GET /v1/banks",
+    resolve:          "POST /v1/resolve",
+    transfers:        "POST /v1/transfers | GET /v1/transfers | GET /v1/transfers/:id",
+    withdrawals:      "POST /v1/withdrawals | GET /v1/withdrawals | POST /v1/withdrawals/verify-account",
+    preview:          "GET /v1/transfers/preview?alias=<alias>",
+    payments_merchant:"POST /v1/payments/merchant",
+    payments:         "GET /v1/payments | GET /v1/payments/:id",
+    merchants:        "GET /v1/merchants | GET /v1/merchants/:alias",
+    vouchers:         "GET /v1/vouchers/products | GET /v1/vouchers/products/:slug",
+    voucher_purchase: "POST /v1/vouchers/purchase",
+    voucher_history:  "GET /v1/vouchers/purchases | GET /v1/vouchers/purchases/:id",
   },
   timestamp: new Date().toISOString(),
 }));

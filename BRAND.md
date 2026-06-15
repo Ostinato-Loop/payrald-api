@@ -1,17 +1,30 @@
-# PayRald — Brand & Color
+# PayRald API
 
-**Identity:** NEON NAVY BLUE (Elite Fintech)
-**Atmosphere:** premium fintech, secure infrastructure, elite financial systems
+**Service:** `payrald-api`  
+**Runtime:** Cloudflare Worker  
+**Deployed at:** `pay.rald.cloud`
 
-| Token | Value |
-|-------|-------|
-| Primary | `#0066FF` |
-| Accent | `#3385FF` |
-| Glow | `rgba(0,102,255,0.22)` |
-| Background | `#07111F` |
-| Background Deep | `#020913` |
+## Purpose
 
-**Gradient:** `linear-gradient(135deg, #3385FF, #0066FF, #0040CC)`
-**Design cues:** neon blue edge glows, payment flow visualizations, premium glassmorphism
-**Category:** Payments
+Public-facing API gateway for the PayRald product.
 
+- JWT authentication (RALD_JWT_SECRET)
+- KV-backed rate limiting
+- Delegates to `core.pay.rald.cloud` for all payment operations
+- Reads wallet/transaction data directly from Supabase for low-latency responses
+- Proxies alias resolution to `routing.rald.cloud`
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /v1/wallet | Balance + virtual account info |
+| GET | /v1/wallet/transactions | Transaction history |
+| GET | /v1/banks | Nigerian bank list |
+| POST | /v1/resolve | Resolve alias → routing metadata |
+| POST | /v1/transfers | Send money to alias |
+| GET | /v1/transfers | List transfers |
+| POST | /v1/withdrawals | Withdraw to bank account |
+| POST | /v1/withdrawals/verify-account | Verify bank account name |
+
+**Operated by LILCKY STUDIO LIMITED**
