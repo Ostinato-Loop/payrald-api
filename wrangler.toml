@@ -13,12 +13,12 @@ ROUTING_URL       = "https://routing.rald.cloud"
 pattern = "pay.rald.cloud/*"
 zone_name = "rald.cloud"
 
-# Rate limiting KV namespace
-# Provision once: wrangler kv namespace create RATE_LIMIT_KV --env production
-# Then update the id below with the output id.
-[[kv_namespaces]]
-binding = "RATE_LIMIT_KV"
-id = "REPLACE_BEFORE_DEPLOY_wrangler_kv_namespace_create_RATE_LIMIT_KV"
+# Rate limiting KV namespace — provisioned separately
+# To enable: run: wrangler kv namespace create RATE_LIMIT_KV --env production
+# Then uncomment the block below and add the namespace ID output from the command above.
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id = "<output-from-wrangler-kv-namespace-create>"
 
 [observability]
 enabled = true
